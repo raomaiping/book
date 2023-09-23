@@ -1,0 +1,41 @@
+.ranking {
+  padding-bottom: 20px;
+  font-size: $font-size-medium;
+
+  .header {
+    background: linear-gradient(180deg, #ffdfd9 0%, rgba(255, 246, 232, 0) 61.54%);
+  }
+
+  .tabList {
+    border-radius: 15px;
+  }
+
+  .tabActive {
+    border-radius: 15px;
+  }
+
+  .tabContent {
+    padding: 0;
+    padding-top: 16px;
+  }
+
+  .bookCover {
+    border-radius: 5px;
+    width: 47px;
+    height: 66px;
+  }
+
+  .bookInfo {
+    .bookName {
+      line-height: 16px;
+      margin-bottom: 4px;
+      color: #333;
+
+      @include wrap(1);
+    }
+    .author {
+      color: #b2b2b2;
+      font-size: $font-size-small;
+    }
+  }
+}

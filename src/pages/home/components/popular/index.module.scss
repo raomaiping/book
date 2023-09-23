@@ -1,0 +1,24 @@
+.popular {
+  .header {
+    background: linear-gradient(180deg, #c5f4f3 0%, rgba(255, 246, 232, 0) 61.54%);
+  }
+
+  .bookName {
+    font-size: $font-size-medium-x;
+    @include no-wrap();
+  }
+
+  .meta {
+    font-size: $font-size-small;
+    color: #969ba3;
+    @include no-wrap();
+  }
+
+  .desc {
+    font-size: $font-size-medium;
+    line-height: 18px;
+    color: #969ba3;
+    @include wrap(2);
+    margin-bottom: 7px;
+  }
+}
