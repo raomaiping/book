@@ -24,4 +24,6 @@ export interface TopBooks {
 
 export interface IMyContext {
   bookInfo?: BookInfo;
+  chapterInfo?: ChapterInfo;
+  updateChapterInfo: (chapterInfo: ChapterInfo | undefined) => void;
 }

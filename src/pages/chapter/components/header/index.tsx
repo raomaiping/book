@@ -42,7 +42,7 @@ const ChapterHeader: React.FC = React.memo(() => {
         <NavBar right={rightRender()} onBack={onBack} />
       </Popup>
       <Popup position="bottom" visible={listenVisible} mask={false}>
-        <Listen visible={listenVisible} setVisible={setListenVisible} />
+        <Listen setVisible={setListenVisible} />
       </Popup>
     </div>
   );

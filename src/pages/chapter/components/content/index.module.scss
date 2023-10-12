@@ -6,17 +6,26 @@
   box-sizing: border-box;
   overflow: hidden;
   overflow-y: auto;
+  user-select: text;
 
   h1 {
     line-height: 1.2;
     margin-bottom: 12px;
     font-size: var(--ygm-font-size-xl);
     font-weight: 400;
+    &::selection {
+      background-color: #3399FF; /* 选中文本的背景颜色 */
+      color: #fff;
+    }
   }
 
   p {
     display: block;
     text-indent: 2em;
+    &::selection {
+      background-color: #3399FF; /* 选中文本的背景颜色 */
+      color: #fff;
+    }
   }
 
   .pagination {

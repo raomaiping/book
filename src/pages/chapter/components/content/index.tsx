@@ -1,20 +1,18 @@
 import React, { useContext } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ErrorBlock, Button } from '@taoyage/react-mobile-ui';
-
 import { chapterActions } from '@/pages/chapter/store';
 import { NIGHT_THEME, NIGHT_THEME_TEXT_COLOR, MyContext } from '@/pages/chapter/constants';
-
 import Loading from '@/components/loading';
 import { useRequest } from '@/hooks/useRequest';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { ChapterInfo } from '@/types/book';
 import { BASE_URL } from '@/constant';
+import useSwitchPage from '@/hooks/useSwitchPage';
 import styles from './index.module.scss';
 
 const ChapterContent: React.FC = React.memo(() => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const { bookId, chapterId } = useParams();
 
   const headerVisible = useAppSelector<boolean>((state) => state.chapter.headerVisible);
@@ -24,14 +22,11 @@ const ChapterContent: React.FC = React.memo(() => {
   const nightTheme = useAppSelector<boolean>((state) => state.chapter.nightTheme);
 
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const { bookInfo } = useContext(MyContext);
+  const { bookInfo, updateChapterInfo } = useContext(MyContext);
   const { error, data: chapterInfo } = useRequest<ChapterInfo>({
     url: `${BASE_URL}/api/yingsx/${bookId}/${chapterId}`,
   });
-  const { chapters = [] } = bookInfo || {};
-
-  const isFirst = chapterId === chapters[0]?.chapterId;
-  const isLast = chapterId === chapters[chapters.length - 1]?.chapterId;
+  const { chapters = [], id } = bookInfo || {};
 
   const onContent = () => {
     dispatch(chapterActions.setHeaderVisible(!headerVisible));
@@ -42,7 +37,7 @@ const ChapterContent: React.FC = React.memo(() => {
 
   const renderChapter = (chapterInfo: ChapterInfo) => {
     return (
-      <div key={chapterInfo.chapterId} data-id={chapterInfo.chapterId}>
+      <div key={chapterInfo.chapterId} data-id={chapterInfo.chapterId} id={id}>
         <h1>{chapterInfo.chapterName}</h1>
         {(chapterInfo?.content || []).map((item, index) => {
           return (
@@ -60,27 +55,17 @@ const ChapterContent: React.FC = React.memo(() => {
     );
   };
 
-  const onPrev = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (isFirst) return;
-    const index = chapters.findIndex((chapter) => chapter.chapterId === chapterId) - 1;
-    navigate(`/book/${bookId}/${chapters[index].chapterId}`, { replace: true });
-  };
-
-  const onNext = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
-    if (isLast) return;
-    const index = chapters.findIndex((chapter) => chapter.chapterId === chapterId) + 1;
-    navigate(`/book/${bookId}/${chapters[index].chapterId}`, { replace: true });
-  };
-
+  const { onNext, onPrev, isFirst, isLast } = useSwitchPage(chapters);
   React.useEffect(() => {
     const element = contentRef.current;
     if (!element) return;
 
     element.scrollTop = 0;
   }, [chapterId]);
-
+  React.useEffect(() => {
+    updateChapterInfo(chapterInfo);
+    console.log(chapterInfo, 11);
+  }, [chapterInfo, updateChapterInfo]);
   if (!chapterInfo) {
     return <Loading />;
   }
@@ -88,7 +73,6 @@ const ChapterContent: React.FC = React.memo(() => {
   if (error || !chapterInfo) {
     return <ErrorBlock />;
   }
-  console.log(fontSize);
 
   return (
     <div

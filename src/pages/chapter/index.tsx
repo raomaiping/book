@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ChapterHeader from '@/pages/chapter/components/header';
 import ChapterContent from '@/pages/chapter/components/content';
@@ -7,7 +7,7 @@ import { useRequest } from '@/hooks/useRequest';
 import { createReducer } from '@/pages/chapter/store';
 import { useReducer } from '@/store';
 import { BASE_URL } from '@/constant';
-import { BookInfo } from '@/types/book';
+import { BookInfo, ChapterInfo } from '@/types/book';
 import { MyContext } from './constants';
 
 const Chapter: React.FC = () => {
@@ -17,11 +17,13 @@ const Chapter: React.FC = () => {
   const { data: bookInfo } = useRequest<BookInfo>({
     url: `${BASE_URL}/api/yingsx/detail/${bookId}`,
   });
-  console.log(bookInfo);
-
+  const [chapterInfo, setChapterInfo] = useState<ChapterInfo>();
+  const updateChapterInfo = (newChapterInfo: ChapterInfo | undefined) => {
+    setChapterInfo(newChapterInfo);
+  };
   useReducer(reducers);
   return (
-    <MyContext.Provider value={{ bookInfo }}>
+    <MyContext.Provider value={{ bookInfo, chapterInfo, updateChapterInfo }}>
       <ChapterHeader />
       <ChapterContent />
       <ChapterFooter />
